@@ -1,11 +1,13 @@
 import * as path from 'path'
 
 export type EditorLookup = {
-  app: string,
+  app: string
   path: string
 }
 
-async function getAvailableEditorsDarwin(): Promise<ReadonlyArray<EditorLookup>> {
+async function getAvailableEditorsDarwin(): Promise<
+  ReadonlyArray<EditorLookup>
+> {
   const appPath: (id: string) => Promise<string> = require('app-path')
 
   const atom = await appPath('com.github.atom')
@@ -41,9 +43,9 @@ async function getAvailableEditorsDarwin(): Promise<ReadonlyArray<EditorLookup>>
 }
 
 type RegistryItem = {
-  name: string,
-  value: string,
-  type: string,
+  name: string
+  value: string
+  type: string
 }
 
 function findAtomExecutable(): Promise<string> {
@@ -51,10 +53,13 @@ function findAtomExecutable(): Promise<string> {
     const Registry = require('winreg')
     const regKey = new Registry({
       hive: Registry.HKCU,
-      key: '\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\atom'
+      key: '\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\atom',
     })
 
-    regKey.values(function (err: Error | null, items: ReadonlyArray<RegistryItem>) {
+    regKey.values(function(
+      err: Error | null,
+      items: ReadonlyArray<RegistryItem>
+    ) {
       if (err) {
         reject(err)
         return
@@ -90,10 +95,14 @@ function findSublimeTextExecutable(): Promise<string> {
     const Registry = require('winreg')
     const regKey = new Registry({
       hive: Registry.HKLM,
-      key: '\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Sublime Text 3_is1'
+      key:
+        '\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Sublime Text 3_is1',
     })
 
-    regKey.values(function (err: Error | null, items: ReadonlyArray<any> /* array of RegistryItem */) {
+    regKey.values(function(
+      err: Error | null,
+      items: ReadonlyArray<any> /* array of RegistryItem */
+    ) {
       if (err) {
         reject(err)
         return
@@ -113,18 +122,25 @@ function findSublimeTextExecutable(): Promise<string> {
         }
       }
 
-      if (displayName === 'Sublime Text' && publisher === 'Sublime HQ Pty Ltd') {
+      if (
+        displayName === 'Sublime Text' &&
+        publisher === 'Sublime HQ Pty Ltd'
+      ) {
         resolve(path.join(installLocation, 'sublime_text.exe'))
         return
       }
 
-      console.debug('Registry entry does not match expected settings for Sublime Text')
+      console.debug(
+        'Registry entry does not match expected settings for Sublime Text'
+      )
       resolve('')
     })
   })
 }
 
-async function getAvailableEditorsWindows(): Promise<ReadonlyArray<EditorLookup>> {
+async function getAvailableEditorsWindows(): Promise<
+  ReadonlyArray<EditorLookup>
+> {
   // Atom - look for the uninstall registry entry and then read it's path
   //        registry entry: `Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\atom`
   //        interesting keys: `DisplayName=Atom` and `Publisher=GitHub Inc`
@@ -172,6 +188,8 @@ export function getAvailableEditors(): Promise<ReadonlyArray<EditorLookup>> {
     return getAvailableEditorsWindows()
   }
 
-  console.warn(`Platform not currently supported for resolving editors: ${process.platform}`)
+  console.warn(
+    `Platform not currently supported for resolving editors: ${process.platform}`
+  )
   return Promise.resolve([])
 }

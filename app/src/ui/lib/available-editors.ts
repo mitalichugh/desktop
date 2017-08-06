@@ -1,5 +1,8 @@
 import { findApp } from './available-editors-darwin'
-import { findSublimeTextExecutable, findAtomExecutable } from './available-editors-win32'
+import {
+  findSublimeTextExecutable,
+  findAtomExecutable,
+} from './available-editors-win32'
 
 export type EditorLookup = {
   app: string
@@ -8,7 +11,7 @@ export type EditorLookup = {
 
 async function getAvailableEditorsDarwin(): Promise<
   ReadonlyArray<EditorLookup>
-  > {
+> {
   const atom = await findApp('com.github.atom', 'Atom')
   const code = await findApp('com.microsoft.VSCode', 'Visual Studio Code')
 
@@ -21,7 +24,7 @@ async function getAvailableEditorsDarwin(): Promise<
 
 async function getAvailableEditorsWindows(): Promise<
   ReadonlyArray<EditorLookup>
-  > {
+> {
   const atom = await findAtomExecutable()
     .catch(error => {
       log.debug('Unable to locate Atom installation', error)

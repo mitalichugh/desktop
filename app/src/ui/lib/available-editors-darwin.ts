@@ -1,6 +1,9 @@
 const appPath: (id: string) => Promise<string> = require('app-path')
 
-export function findApp(bundleId: string, name: string): Promise<{
+export function findApp(
+  bundleId: string,
+  name: string
+): Promise<{
   app: string
   path: string
 }> {

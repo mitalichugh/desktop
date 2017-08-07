@@ -858,6 +858,8 @@ export class AppStore {
     this.selectedExternalEditor =
       externalEditorValue === null ? externalEditorDefault : externalEditorValue
 
+    this.updateExternalEditorMenuItem(this.selectedExternalEditor)
+
     this.emitUpdateNow()
 
     this.accountsStore.refresh()
@@ -2224,7 +2226,13 @@ export class AppStore {
     localStorage.setItem(externalEditorKey, selectedEditor)
     this.emitUpdate()
 
+    this.updateExternalEditorMenuItem(this.selectedExternalEditor)
+
     return Promise.resolve()
+  }
+
+  private updateExternalEditorMenuItem(selectedEditor: string) {
+    ipcRenderer.send('external-editor-changed', { selectedEditor })
   }
 
   public _setUpdateBannerVisibility(visibility: boolean) {
